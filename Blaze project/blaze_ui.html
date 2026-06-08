@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0a0f">
+<title>B.L.A.Z.E — Neural AI Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0a0a0f;
+  --bg2:     #0f0f1a;
+  --bg3:     #141422;
+  --bg4:     #1c1c30;
+  --acc:     #7c6af7;
+  --acc2:    #5b4de0;
+  --glow:    #a78bfa;
+  --cyan:    #22d3ee;
+  --green:   #4ade80;
+  --amber:   #fbbf24;
+  --red:     #f87171;
+  --pink:    #f472b6;
+  --txt:     #e2e8f0;
+  --txt2:    #94a3b8;
+  --muted:   #334155;
+  --bdr:     #1e1e35;
+  --bdr2:    #2a2a48;
+  --mono:    'JetBrains Mono', monospace;
+  --sans:    'Syne', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--mono);
+  font-size: 13px;
+  overflow: hidden;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bdr2); border-radius: 2px; }
+
+/* ── Layout ── */
+.app {
+  display: grid;
+  grid-template-rows: 52px 1fr 56px;
+  grid-template-columns: 230px 1fr 200px;
+  height: 100vh;
+  grid-template-areas:
+    "titlebar titlebar titlebar"
+    "left     chat     right"
+    "footer   footer   footer";
+}
+
+/* ── Titlebar ── */
+.titlebar {
+  grid-area: titlebar;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--bdr);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logo-hex {
+  width: 32px; height: 32px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.logo-hex svg { width: 100%; height: 100%; }
+
+.brand-name {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.brand-sub {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-top: 1px;
+}
+
+.titlebar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tb-btn {
+  background: var(--bg3);
+  border: 1px solid var(--bdr);
+  border-radius: 6px;
+  color: var(--txt2);
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.tb-btn:hover { background: var(--bg4); border-color: var(--bdr2); color: var(--txt); }
+.tb-btn.accent { background: var(--acc2); border-color: var(--acc); color: #fff; }
+.tb-btn.accent:hover { background: var(--acc); }
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg3);
+  border: 1px solid var(--bdr);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 10px;
+}
+
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.status-txt { color: var(--green); font-size: 10px; }
+
+/* ── Left Panel ── */
+.left {
+  grid-area: left;
+  background: var(--bg2);
+  border-right: 1px solid var(--bdr);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.panel-section {
+  border-bottom: 1px solid var(--bdr);
+  padding: 12px;
+}
+
+.section-label {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* Clock */
+.clock-display {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.date-display {
+  font-size: 10px;
+  color: var(--txt2);
+  margin-top: 4px;
+}
+
+/* Vitals */
+.vital-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.vital-label {
+  font-size: 9px;
+  color: var(--txt2);
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.vital-track {
+  flex: 1;
+  height: 4px;
+  background: var(--bdr);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.vital-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s ease;
+}
+
+.vital-val {
+  font-size: 9px;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.battery-row {
+  font-size: 10px;
+  color: var(--green);
+  margin-top: 4px;
+}
+
+/* Weather */
+.weather-display {
+  font-size: 11px;
+  color: var(--txt2);
+  line-height: 1.6;
+}
+
+.weather-temp {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+}
+
+/* Quick actions */
+.quick-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--txt2);
+  cursor: pointer;
+  transition: all 0.1s;
+  margin-bottom: 1px;
+}
+.quick-btn:hover { background: var(--bg4); color: var(--txt); }
+.quick-btn:active { background: var(--bdr2); }
+
+/* Reminders */
+.reminder-item {
+  font-size: 10px;
+  color: var(--txt2);
+  padding: 3px 0;
+  border-bottom: 1px solid var(--bdr);
+  line-height: 1.4;
+}
+.reminder-item:last-child { border-bottom: none; }
+.reminder-time { color: var(--amber); font-size: 9px; }
+
+/* ── Chat Area ── */
+.chat {
+  grid-area: chat;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  min-height: 0;
+}
+
+/* Chip bar */
+.chipbar {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--bdr);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+.chipbar::-webkit-scrollbar { height: 2px; }
+
+.chip {
+  background: var(--bg3);
+  border: 1px solid var(--bdr);
+  border-radius: 4px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 3px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.1s;
+  letter-spacing: 0.06em;
+}
+.chip:hover { border-color: var(--acc); color: var(--acc); }
+
+/* Emotion bar */
+.emotion-bar {
+  padding: 4px 14px;
+  font-size: 10px;
+  color: var(--amber);
+  background: var(--bg);
+  min-height: 20px;
+  flex-shrink: 0;
+}
+
+/* Messages */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.msg-block {
+  margin-bottom: 14px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.msg-label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.msg-label.user  { color: var(--muted); }
+.msg-label.blaze { color: var(--acc); }
+.msg-label.system-lbl { color: var(--cyan); }
+.msg-label.alert-lbl  { color: var(--amber); }
+.msg-label.err-lbl    { color: var(--red); }
+.msg-label.remind-lbl { color: var(--green); }
+.msg-label.suggest-lbl{ color: var(--glow); }
+
+.msg-text {
+  font-size: 12px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.msg-text.user  { color: var(--txt); }
+.msg-text.blaze { color: var(--txt2); }
+.msg-text.system { color: var(--cyan); font-size: 11px; }
+.msg-text.alert  { color: var(--amber); }
+.msg-text.error  { color: var(--red); }
+.msg-text.reminder { color: var(--green); }
+.msg-text.suggestion { color: var(--glow); font-size: 11px; }
+
+/* Thinking indicator */
+.thinking {
+  display: none;
+  gap: 4px;
+  align-items: center;
+  padding: 8px 14px;
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.thinking.active { display: flex; }
+.thinking-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--acc);
+  animation: think 1.2s ease-in-out infinite;
+}
+.thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes think {
+  0%,80%,100% { opacity: 0.2; transform: scale(0.8); }
+  40%          { opacity: 1;   transform: scale(1.1); }
+}
+
+/* Input row */
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg2);
+  border-top: 1px solid var(--bdr);
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: color 0.1s;
+  flex-shrink: 0;
+}
+.icon-btn:hover { color: var(--txt); background: var(--bg3); }
+.icon-btn.mic-on { color: var(--red); }
+
+.input-wrap {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--bdr);
+  border-radius: 6px;
+  transition: border-color 0.15s;
+  min-width: 0;
+}
+.input-wrap:focus-within { border-color: var(--acc2); }
+
+#msg-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--txt);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 9px 12px;
+  resize: none;
+  caret-color: var(--acc);
+}
+
+.send-btn {
+  background: var(--acc);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.send-btn:hover   { background: var(--acc2); }
+.send-btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+/* ── Right Panel ── */
+.right {
+  grid-area: right;
+  background: var(--bg2);
+  border-left: 1px solid var(--bdr);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Model card */
+.model-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--glow);
+  font-family: var(--sans);
+}
+
+.cap-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 0;
+}
+
+.cap-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cap-text {
+  font-size: 10px;
+  color: var(--txt2);
+}
+
+/* Stats bars */
+.stat-item {
+  margin-bottom: 8px;
+}
+
+.stat-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--txt2);
+  margin-bottom: 3px;
+}
+
+.stat-bar-track {
+  height: 3px;
+  background: var(--bdr);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  background: var(--acc);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* ── Footer ── */
+.footer {
+  grid-area: footer;
+  background: var(--bg2);
+  border-top: 1px solid var(--bdr);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Modal / Settings ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--bdr2);
+  border-radius: 12px;
+  width: min(520px, 96vw);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--bdr);
+}
+
+.modal-title {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-close:hover { color: var(--txt); }
+
+.modal-body {
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-label {
+  font-size: 10px;
+  color: var(--txt2);
+  letter-spacing: 0.06em;
+}
+
+.form-input, .form-select {
+  background: var(--bg3);
+  border: 1px solid var(--bdr);
+  border-radius: 5px;
+  color: var(--txt);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus { border-color: var(--acc2); }
+
+.form-section {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 8px;
+  border-top: 1px solid var(--bdr);
+}
+
+.radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--txt2);
+  cursor: pointer;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--bdr);
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 70px;
+  right: 16px;
+  background: var(--bg4);
+  border: 1px solid var(--bdr2);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 11px;
+  color: var(--txt);
+  z-index: 200;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.2s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { border-color: var(--green); color: var(--green); }
+.toast.error   { border-color: var(--red);   color: var(--red); }
+
+/* ── Mobile responsive ── */
+@media (max-width: 768px) {
+  .app {
+    grid-template-rows: 52px 1fr 52px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "titlebar"
+      "chat"
+      "footer";
+  }
+
+  .left, .right { display: none; }
+
+  .left.mobile-open {
+    display: flex;
+    position: fixed;
+    top: 52px; left: 0; bottom: 52px;
+    width: 80vw;
+    z-index: 50;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+  }
+
+  .right.mobile-open {
+    display: flex;
+    position: fixed;
+    top: 52px; right: 0; bottom: 52px;
+    width: 80vw;
+    z-index: 50;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+  }
+
+  .mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 40;
+  }
+  .mobile-overlay.show { display: block; }
+
+  .brand-sub { display: none; }
+  .footer-right { display: none; }
+}
+
+@media (max-width: 480px) {
+  .chipbar { padding: 6px 8px; }
+  .messages { padding: 12px 10px; }
+  .input-row { padding: 8px; }
+  .send-btn { padding: 9px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── Titlebar ── -->
+  <header class="titlebar">
+    <div class="logo">
+      <div class="logo-hex">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#5b4de0" stroke="#a78bfa" stroke-width="1"/>
+          <text x="16" y="21" text-anchor="middle" fill="white" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">B</text>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">B.L.A.Z.E</div>
+        <div class="brand-sub">NEURAL AI ASSISTANT</div>
+      </div>
+    </div>
+
+    <div class="titlebar-right">
+      <!-- Mobile menu buttons -->
+      <button class="tb-btn" id="mob-left-btn" onclick="toggleMobilePanel('left')" style="display:none">☰ Menu</button>
+      <button class="tb-btn" id="mob-right-btn" onclick="toggleMobilePanel('right')" style="display:none">⊞ Stats</button>
+
+      <button class="tb-btn" onclick="openSettings()">SETTINGS</button>
+      <button class="tb-btn" id="voice-toggle-btn" onclick="toggleVoice()">MIC OFF</button>
+      <button class="tb-btn accent" onclick="rateLast(5)">↑ GOOD</button>
+      <button class="tb-btn" style="color:var(--red)" onclick="rateLast(1)">↓ BAD</button>
+
+      <div class="status-pill">
+        <div class="status-dot" id="conn-dot"></div>
+        <span class="status-txt" id="conn-txt">CONNECTING</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Left Panel ── -->
+  <aside class="left" id="left-panel">
+
+    <div class="panel-section">
+      <div class="section-label">Clock</div>
+      <div class="clock-display" id="clock">--:--:--</div>
+      <div class="date-display" id="date-display">---</div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-label">System Vitals</div>
+      <div class="vital-row">
+        <div class="vital-label">CPU</div>
+        <div class="vital-track"><div class="vital-fill" id="cpu-fill" style="width:0%;background:var(--cyan)"></div></div>
+        <div class="vital-val" id="cpu-val" style="color:var(--cyan)">0%</div>
+      </div>
+      <div class="vital-row">
+        <div class="vital-label">RAM</div>
+        <div class="vital-track"><div class="vital-fill" id="ram-fill" style="width:0%;background:var(--acc)"></div></div>
+        <div class="vital-val" id="ram-val" style="color:var(--acc)">0%</div>
+      </div>
+      <div class="vital-row">
+        <div class="vital-label">DISK</div>
+        <div class="vital-track"><div class="vital-fill" id="disk-fill" style="width:0%;background:var(--amber)"></div></div>
+        <div class="vital-val" id="disk-val" style="color:var(--amber)">0%</div>
+      </div>
+      <div class="battery-row" id="battery-row">Battery: --</div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-label">Weather</div>
+      <div id="weather-temp" class="weather-temp">--°C</div>
+      <div id="weather-info" class="weather-display">Fetching...</div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-label">Quick Actions</div>
+      <button class="quick-btn" onclick="sendQuick('Give me a morning briefing with weather, news, and system status')">⏰  Morning Brief</button>
+      <button class="quick-btn" onclick="sendQuick('Get me the latest news headlines')">📰  Latest News</button>
+      <button class="quick-btn" onclick="sendQuick('Organize my downloads folder')">🗂   Organize Files</button>
+      <button class="quick-btn" onclick="sendQuick('What are all your capabilities?')">💡  Capabilities</button>
+      <button class="quick-btn" onclick="sendQuick('List all my pending reminders')">📝  Reminders</button>
+      <button class="quick-btn" onclick="sendQuick('Show me detailed system statistics')">📊  System Stats</button>
+      <button class="quick-btn" onclick="sendQuick('What patterns have you learned about me?')">🔮  Predictions</button>
+      <button class="quick-btn" onclick="sendQuick('Show me my feedback and satisfaction stats')">💬  Feedback Stats</button>
+    </div>
+
+    <div class="panel-section" style="flex:1">
+      <div class="section-label">Reminders</div>
+      <div id="reminders-list"><div class="reminder-item" style="color:var(--muted)">None pending</div></div>
+    </div>
+
+  </aside>
+
+  <!-- ── Chat ── -->
+  <main class="chat">
+
+    <!-- Chip bar -->
+    <div class="chipbar">
+      <button class="chip" onclick="sendQuick('What time is it?')">TIME</button>
+      <button class="chip" onclick="sendQuick('What\'s today\'s date?')">DATE</button>
+      <button class="chip" onclick="sendQuick('What\'s the weather?')">WEATHER</button>
+      <button class="chip" onclick="sendQuick('Tell me a joke')">JOKE</button>
+      <button class="chip" onclick="sendQuick('Show me GitHub trending repos')">GITHUB</button>
+      <button class="chip" onclick="sendQuick('What can you do?')">HELP</button>
+      <button class="chip" onclick="sendQuick('Clear conversation history')">CLEAR</button>
+    </div>
+
+    <!-- Emotion indicator -->
+    <div class="emotion-bar" id="emotion-bar"></div>
+
+    <!-- Messages -->
+    <div class="messages" id="messages"></div>
+
+    <!-- Thinking indicator — sits between messages and input, hidden by default -->
+    <div class="thinking" id="thinking">
+      <div class="thinking-dot"></div>
+      <div class="thinking-dot"></div>
+      <div class="thinking-dot"></div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-row">
+      <button class="icon-btn" id="mic-btn" title="Voice input" onclick="toggleMic()">🎙</button>
+      <div class="input-wrap">
+        <textarea id="msg-input" rows="1" placeholder="Ask anything, sir..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      </div>
+      <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled>SEND ›</button>
+    </div>
+
+  </main>
+
+  <!-- ── Right Panel ── -->
+  <aside class="right" id="right-panel">
+
+    <div class="panel-section">
+      <div class="section-label">Model</div>
+      <div class="model-badge" id="model-badge">llama-3.3-70b</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">Groq Free Inference</div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-label">Capabilities</div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--cyan)"></div><div class="cap-text">NLP Engine</div></div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--green)"></div><div class="cap-text">Voice I/O</div></div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--acc)"></div><div class="cap-text">Pattern Learner</div></div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--amber)"></div><div class="cap-text">Secure Vault</div></div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--txt2)"></div><div class="cap-text">File Manager</div></div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--txt2)"></div><div class="cap-text">Integrations</div></div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--txt2)"></div><div class="cap-text">Domain Knowledge</div></div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--pink)"></div><div class="cap-text">Emotional IQ</div></div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--txt2)"></div><div class="cap-text">Auto Rules</div></div>
+      <div class="cap-item"><div class="cap-dot" style="background:var(--txt2)"></div><div class="cap-text">Plugins</div></div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-label">Top Commands</div>
+      <div id="top-cmds" style="font-size:10px;color:var(--txt2)">—</div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-label">Session</div>
+      <div style="font-size:10px;color:var(--green);margin-bottom:4px" id="session-status">Active</div>
+      <div style="font-size:9px;color:var(--muted)" id="platform-info">—</div>
+    </div>
+
+  </aside>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <span>B.L.A.Z.E  ·  BY KARTIK (BLAZEO8)  ·  GROQ FREE INFERENCE</span>
+    <div class="footer-right">
+      <span id="footer-sys">—</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Mobile overlay -->
+<div class="mobile-overlay" id="mob-overlay" onclick="closeMobilePanels()"></div>
+
+<!-- ── Settings Modal ── -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">SETTINGS</div>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label class="form-label">Your name</label>
+        <input class="form-input" id="s-name" type="text" placeholder="sir">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Weather city</label>
+        <input class="form-input" id="s-city" type="text" placeholder="Delhi">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Tone</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="tone" value="professional"> Professional</label>
+          <label class="radio-item"><input type="radio" name="tone" value="casual"> Casual</label>
+          <label class="radio-item"><input type="radio" name="tone" value="minimal"> Minimal</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Verbosity</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="verbosity" value="brief"> Brief</label>
+          <label class="radio-item"><input type="radio" name="verbosity" value="normal"> Normal</label>
+          <label class="radio-item"><input type="radio" name="verbosity" value="detailed"> Detailed</label>
+        </div>
+      </div>
+      <div class="form-section">Custom Command</div>
+      <div class="form-row">
+        <label class="form-label">Trigger keyword</label>
+        <input class="form-input" id="s-trig" type="text" placeholder="e.g. play music">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Response text</label>
+        <input class="form-input" id="s-resp" type="text" placeholder="Response...">
+      </div>
+      <button class="tb-btn" onclick="addCustomCommand()" style="align-self:flex-start">ADD COMMAND</button>
+    </div>
+    <div class="modal-footer">
+      <button class="tb-btn" onclick="closeSettings()">CANCEL</button>
+      <button class="tb-btn accent" onclick="saveSettings()">SAVE SETTINGS</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let ws          = null;
+let wsConnected = false;
+let voiceOn     = false;
+let micRec      = null;
+let cmdHistory  = [];
+let histIdx     = -1;
+
+// ── Server base URL (works when served by Python OR opened as file://) ──────
+const SERVER_HOST = (location.protocol === 'file:') ? 'localhost:8000' : location.host;
+const SERVER_HTTP = (location.protocol === 'file:' || location.protocol === 'http:') ? 'http' : 'https';
+const API_BASE    = `${SERVER_HTTP}://${SERVER_HOST}`;
+
+// ── WebSocket ──────────────────────────────────────────────────────────────
+function connectWS() {
+  const proto = SERVER_HTTP === 'https' ? 'wss' : 'ws';
+  ws = new WebSocket(`${proto}://${SERVER_HOST}/ws`);
+
+  ws.onopen = () => {
+    wsConnected = true;
+    setConnStatus(true);
+  };
+
+  ws.onclose = () => {
+    wsConnected = false;
+    setConnStatus(false);
+    setTimeout(connectWS, 3000);
+  };
+
+  ws.onerror = () => {
+    wsConnected = false;
+    setConnStatus(false);
+  };
+
+  ws.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    handleWsMessage(data);
+  };
+}
+
+function handleWsMessage(data) {
+  hideThinking();
+  switch (data.type) {
+    case 'thinking':
+      showThinking();
+      break;
+    case 'blaze':
+      appendMsg('blaze', 'BLAZE', data.text);
+      break;
+    case 'system':
+      appendMsg('system', '›', data.text);
+      break;
+    case 'alert':
+      appendMsg('alert', '⚠', data.text);
+      showToast(data.text, 'error');
+      break;
+    case 'reminder':
+      appendMsg('reminder', '🔔 REMINDER', data.text);
+      showToast('Reminder: ' + data.text, 'success');
+      break;
+    case 'suggestion':
+      appendMsg('suggestion', '◈', data.text);
+      break;
+    case 'error':
+      appendMsg('error', '✗', data.text);
+      break;
+    case 'emotion':
+      document.getElementById('emotion-bar').textContent = '  Mood: ' + data.text;
+      break;
+  }
+  enableInput();
+}
+
+// ── Message rendering ──────────────────────────────────────────────────────
+function appendMsg(type, label, text) {
+  const msgs = document.getElementById('messages');
+
+  const block = document.createElement('div');
+  block.className = 'msg-block';
+
+  const lbl = document.createElement('div');
+  lbl.className = `msg-label ${type === 'user' ? 'user' : type === 'blaze' ? 'blaze' : type + '-lbl'}`;
+  lbl.textContent = label;
+
+  const txt = document.createElement('div');
+  txt.className = `msg-text ${type}`;
+  txt.textContent = text;
+
+  block.appendChild(lbl);
+  block.appendChild(txt);
+
+  msgs.appendChild(block);
+  // Use requestAnimationFrame so scroll runs after browser paints the new element
+  requestAnimationFrame(() => { msgs.scrollTop = msgs.scrollHeight; });
+}
+
+function showThinking() {
+  document.getElementById('thinking').classList.add('active');
+  const msgs = document.getElementById('messages');
+  requestAnimationFrame(() => { msgs.scrollTop = msgs.scrollHeight; });
+}
+
+function hideThinking() {
+  document.getElementById('thinking').classList.remove('active');
+}
+
+// ── Send message ────────────────────────────────────────────────────────────
+function sendMessage() {
+  const input = document.getElementById('msg-input');
+  const text  = input.value.trim();
+  if (!text) return;
+
+  if (!wsConnected) {
+    showToast('Not connected — reconnecting...', 'error');
+    return;
+  }
+
+  appendMsg('user', 'YOU', text);
+  cmdHistory.unshift(text);
+  histIdx = -1;
+
+  disableInput();
+  document.getElementById('emotion-bar').textContent = '';
+
+  ws.send(JSON.stringify({ message: text }));
+
+  input.value = '';
+  input.style.height = 'auto';
+  input.focus();
+}
+
+function sendQuick(cmd) {
+  document.getElementById('msg-input').value = cmd;
+  sendMessage();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+  if (e.key === 'ArrowUp') {
+    histIdx = Math.min(histIdx + 1, cmdHistory.length - 1);
+    if (cmdHistory[histIdx]) document.getElementById('msg-input').value = cmdHistory[histIdx];
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function disableInput() {
+  document.getElementById('send-btn').disabled = true;
+  document.getElementById('msg-input').disabled = true;
+}
+
+function enableInput() {
+  document.getElementById('send-btn').disabled = false;
+  document.getElementById('msg-input').disabled = false;
+  document.getElementById('msg-input').focus();
+}
+
+// ── Status ─────────────────────────────────────────────────────────────────
+function setConnStatus(online) {
+  const dot = document.getElementById('conn-dot');
+  const txt = document.getElementById('conn-txt');
+  dot.style.background    = online ? 'var(--green)' : 'var(--red)';
+  dot.style.animation     = online ? '' : 'none';
+  txt.style.color         = online ? 'var(--green)' : 'var(--red)';
+  txt.textContent         = online ? 'ONLINE' : 'OFFLINE';
+  document.getElementById('send-btn').disabled = !online;
+}
+
+// ── Dashboard polling ───────────────────────────────────────────────────────
+async function pollStatus() {
+  try {
+    const r = await fetch(`${API_BASE}/api/status`);
+    if (!r.ok) return;
+    const d = await r.json();
+
+    document.getElementById('clock').textContent        = d.time || '--:--:--';
+    document.getElementById('date-display').textContent = d.date || '---';
+
+    setVital('cpu',  d.cpu,  'var(--cyan)');
+    setVital('ram',  d.ram,  'var(--acc)');
+    setVital('disk', d.disk, 'var(--amber)');
+
+    if (d.battery) {
+      const plug  = d.battery.plugged ? '⚡' : '🔋';
+      const pct   = d.battery.percent;
+      const color = pct < 15 ? 'var(--red)' : pct < 30 ? 'var(--amber)' : 'var(--green)';
+      const el = document.getElementById('battery-row');
+      el.textContent = `Battery  ${pct}%  ${plug}`;
+      el.style.color = color;
+    }
+
+    document.getElementById('platform-info').textContent = d.platform || '—';
+    document.getElementById('footer-sys').textContent    =
+      `CPU ${d.cpu}%  RAM ${d.ram}%  DISK ${d.disk}%`;
+
+    document.getElementById('voice-toggle-btn').textContent = d.voice ? 'MIC ON' : 'MIC OFF';
+
+  } catch(e) {}
+}
+
+function setVital(id, val, color) {
+  const fill = document.getElementById(`${id}-fill`);
+  const lbl  = document.getElementById(`${id}-val`);
+  if (!fill || !lbl) return;
+  const pct   = Math.min(Math.round(val), 100);
+  const c     = pct > 85 ? 'var(--red)' : pct > 70 ? 'var(--amber)' : color;
+  fill.style.width      = pct + '%';
+  fill.style.background = c;
+  lbl.textContent       = pct + '%';
+  lbl.style.color       = c;
+}
+
+async function pollWeather() {
+  try {
+    const r = await fetch(`${API_BASE}/api/weather`);
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d.error) {
+      document.getElementById('weather-info').textContent = 'Unavailable';
+      return;
+    }
+    document.getElementById('weather-temp').textContent =
+      `${d.temp_c !== undefined ? d.temp_c : '--'}°C`;
+    document.getElementById('weather-info').textContent =
+      `${d.city || ''}  ·  ${d.desc || ''}\nHumidity ${d.humidity || '--'}%`;
+  } catch(e) {}
+}
+
+async function pollReminders() {
+  try {
+    const r = await fetch(`${API_BASE}/api/reminders`);
+    if (!r.ok) return;
+    const list = await r.json();
+    const el   = document.getElementById('reminders-list');
+    el.textContent = '';
+    if (!list.length) {
+      const empty = document.createElement('div');
+      empty.className = 'reminder-item';
+      empty.style.color = 'var(--muted)';
+      empty.textContent = 'None pending';
+      el.appendChild(empty);
+      return;
+    }
+    list.slice(0,5).forEach(rem => {
+      const item = document.createElement('div');
+      item.className = 'reminder-item';
+      const msg = document.createElement('div');
+      msg.textContent = rem.message;
+      const time = document.createElement('div');
+      time.className = 'reminder-time';
+      time.textContent = rem.fire_at ? rem.fire_at.slice(11,16) : '';
+      item.appendChild(msg);
+      item.appendChild(time);
+      el.appendChild(item);
+    });
+  } catch(e) {}
+}
+
+async function pollStats() {
+  try {
+    const r = await fetch(`${API_BASE}/api/stats`);
+    if (!r.ok) return;
+    const d = await r.json();
+    const el = document.getElementById('top-cmds');
+    if (d.top_commands && d.top_commands.length) {
+      el.textContent = '';
+      d.top_commands.slice(0,5).forEach(c => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;justify-content:space-between;margin-bottom:3px';
+        const cmd = document.createElement('span');
+        cmd.style.cssText = 'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px';
+        cmd.textContent = c.command;
+        const cnt = document.createElement('span');
+        cnt.style.cssText = 'color:var(--acc);flex-shrink:0;margin-left:4px';
+        cnt.textContent = c.count + '×';
+        row.appendChild(cmd);
+        row.appendChild(cnt);
+        el.appendChild(row);
+      });
+    }
+  } catch(e) {}
+}
+
+// ── Voice toggle ────────────────────────────────────────────────────────────
+function toggleVoice() {
+  const btn = document.getElementById('voice-toggle-btn');
+  voiceOn = !voiceOn;
+  btn.textContent = voiceOn ? 'MIC ON' : 'MIC OFF';
+  btn.style.color = voiceOn ? 'var(--cyan)' : '';
+  showToast(voiceOn ? 'Voice output enabled' : 'Voice output disabled');
+}
+
+async function toggleMic() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    showToast('Speech recognition not supported in this browser', 'error');
+    return;
+  }
+  const btn = document.getElementById('mic-btn');
+  if (micRec) {
+    micRec.stop(); micRec = null;
+    btn.classList.remove('mic-on');
+    return;
+  }
+  const SR  = window.SpeechRecognition || window.webkitSpeechRecognition;
+  micRec    = new SR();
+  micRec.continuous    = false;
+  micRec.interimResults= false;
+  micRec.lang          = 'en-US';
+  btn.classList.add('mic-on');
+  micRec.onresult = (e) => {
+    const text = e.results[0][0].transcript;
+    document.getElementById('msg-input').value = text;
+    sendMessage();
+  };
+  micRec.onend = () => {
+    btn.classList.remove('mic-on');
+    micRec = null;
+  };
+  micRec.onerror = () => {
+    btn.classList.remove('mic-on');
+    micRec = null;
+    showToast('Mic error — check browser permissions', 'error');
+  };
+  micRec.start();
+}
+
+// ── Feedback ────────────────────────────────────────────────────────────────
+async function rateLast(score) {
+  try {
+    const r = await fetch(`${API_BASE}/api/feedback`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ rating: score })
+    });
+    const d = await r.json();
+    showToast(d.message || 'Feedback saved', 'success');
+  } catch(e) {
+    showToast('Could not save feedback', 'error');
+  }
+}
+
+// ── Settings ────────────────────────────────────────────────────────────────
+async function openSettings() {
+  try {
+    const r = await fetch(`${API_BASE}/api/settings`);
+    const d = await r.json();
+    document.getElementById('s-name').value = d.user_name || '';
+    document.getElementById('s-city').value = d.city || '';
+    document.querySelectorAll('input[name="tone"]').forEach(el => {
+      el.checked = el.value === d.tone;
+    });
+    document.querySelectorAll('input[name="verbosity"]').forEach(el => {
+      el.checked = el.value === d.verbosity;
+    });
+  } catch(e) {}
+  document.getElementById('settings-modal').classList.add('open');
+}
+
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('open');
+}
+
+async function saveSettings() {
+  const tone = document.querySelector('input[name="tone"]:checked')?.value;
+  const verb = document.querySelector('input[name="verbosity"]:checked')?.value;
+  try {
+    await fetch(`${API_BASE}/api/settings`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        user_name: document.getElementById('s-name').value.trim() || null,
+        city:      document.getElementById('s-city').value.trim() || null,
+        tone:      tone || null,
+        verbosity: verb || null,
+      })
+    });
+    showToast('Settings saved, sir.', 'success');
+    closeSettings();
+  } catch(e) {
+    showToast('Could not save settings', 'error');
+  }
+}
+
+async function addCustomCommand() {
+  const trigger  = document.getElementById('s-trig').value.trim();
+  const response = document.getElementById('s-resp').value.trim();
+  if (!trigger || !response) return;
+  try {
+    await fetch(`${API_BASE}/api/commands`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ trigger, response })
+    });
+    showToast(`Command "${trigger}" added`, 'success');
+    document.getElementById('s-trig').value = '';
+    document.getElementById('s-resp').value = '';
+  } catch(e) {
+    showToast('Could not add command', 'error');
+  }
+}
+
+// ── Toast ───────────────────────────────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = 'toast show ' + type;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = 'toast'; }, 3000);
+}
+
+// ── Mobile panels ────────────────────────────────────────────────────────────
+function toggleMobilePanel(side) {
+  const panel   = document.getElementById(side + '-panel');
+  const overlay = document.getElementById('mob-overlay');
+  const isOpen  = panel.classList.contains('mobile-open');
+  closeMobilePanels();
+  if (!isOpen) {
+    panel.classList.add('mobile-open');
+    overlay.classList.add('show');
+  }
+}
+
+function closeMobilePanels() {
+  document.querySelectorAll('.left,.right').forEach(p => p.classList.remove('mobile-open'));
+  document.getElementById('mob-overlay').classList.remove('show');
+}
+
+// ── Startup sequence ─────────────────────────────────────────────────────────
+function bootSequence() {
+  const msgs = [
+    { type:'system', text:'Initializing neural core...' },
+    { type:'system', text:'Database connected.' },
+    { type:'system', text:'Pattern learner active.' },
+    { type:'system', text:'Emotional intelligence active.' },
+    { type:'system', text:'All systems nominal.' },
+  ];
+  msgs.forEach((m, i) => {
+    setTimeout(() => appendMsg(m.type, '›', m.text), i * 250);
+  });
+
+  setTimeout(() => {
+    const h = new Date().getHours();
+    const gr = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    appendMsg('blaze', 'BLAZE',
+      `${gr}, sir. I am B.L.A.Z.E — Brilliantly Linked Autonomous Zone Engine, ` +
+      `running in Web mode. Neural core online, all 10 intelligence systems active. ` +
+      `How may I assist you today?`
+    );
+  }, msgs.length * 250 + 200);
+}
+
+// ── Mobile detection ──────────────────────────────────────────────────────────
+function checkMobile() {
+  const isMob = window.innerWidth <= 768;
+  document.getElementById('mob-left-btn').style.display  = isMob ? '' : 'none';
+  document.getElementById('mob-right-btn').style.display = isMob ? '' : 'none';
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  connectWS();
+  bootSequence();
+  checkMobile();
+
+  // Status every 2s
+  pollStatus();
+  setInterval(pollStatus, 2000);
+
+  // Weather every 10min
+  pollWeather();
+  setInterval(pollWeather, 600000);
+
+  // Reminders every 30s
+  pollReminders();
+  setInterval(pollReminders, 30000);
+
+  // Stats every 60s
+  pollStats();
+  setInterval(pollStats, 60000);
+
+  document.getElementById('msg-input').focus();
+});
+
+window.addEventListener('resize', checkMobile);
+
+// Close modal on overlay click
+document.getElementById('settings-modal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeSettings();
+});
+</script>
+</body>
+</html>
