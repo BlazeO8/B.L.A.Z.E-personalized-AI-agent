@@ -1,0 +1,54 @@
+# ==================================================================================
+# Security & Hardening Configuration for Pre-commit Hook
+# ==================================================================================
+# This file prevents accidental commits of sensitive data like API keys
+# Install: pip install pre-commit
+# Setup: pre-commit install
+# Run manually: pre-commit run --all-files
+# ==================================================================================
+
+repos:
+  # Detect secrets and private keys
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
+
+  # Check for large files
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      
+      # Prevent .env commits
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-json
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      
+      # Prevent commits with @@ markers
+      - id: mixed-line-ending
+      
+      # Ensure files end with newline
+      - id: end-of-file-fixer
+
+  # Prevent .env file commits
+  - repo: local
+    hooks:
+      - id: forbid-env-commits
+        name: Forbid .env commits
+        entry: bash -c 'if [[ $(git diff --cached --name-only) == *".env"* ]]; then echo "❌ ERROR: .env file cannot be committed!"; exit 1; fi'
+        language: system
+        stages: [commit]
+      
+      - id: forbid-secrets
+        name: Forbid secrets in code
+        entry: bash -c 'if grep -r "GROQ_API_KEY\|API_TOKEN\|PASSWORD" --include="*.py" Blaze\ project/ | grep -v "=.*\"\"" | grep -v ".env"; then echo "❌ ERROR: Possible secret found in code!"; exit 1; fi'
+        language: system
+        stages: [commit]
+        exclude: config.py|security.py

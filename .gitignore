@@ -1,13 +1,18 @@
 # ── Secrets (NEVER commit these) ─────────────────────────────────────────────
 .env
+.env.local
+.env.*.local
 *.key
 vault.enc
+.secrets.baseline
 
 # ── B.L.A.Z.E runtime data ───────────────────────────────────────────────────
 ~/.blaze/
 blaze.db
 blaze.log
 *.enc
+cert.pem
+key.pem
 
 # ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
@@ -19,22 +24,72 @@ __pycache__/
 dist/
 build/
 *.egg
+*.whl
+pip-log.txt
+pip-delete-this-directory.txt
 
 # ── Virtual environments ──────────────────────────────────────────────────────
 .venv/
 venv/
 env/
 ENV/
+env.bak/
+venv.bak/
 
 # ── VS Code ───────────────────────────────────────────────────────────────────
 .vscode/
 *.code-workspace
+.history/
 
-# ── OS garbage ───────────────────────────────────────────────────────────────
+# ── JetBrains IDEs ───────────────────────────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+
+# ── OS garbage ────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
+.AppleDouble
+.LSOverride
+Icon
 
-# ── Backups ───────────────────────────────────────────────────────────────────
+# ── Backups & Temp ────────────────────────────────────────────────────────────
 *.bak
 *.orig
+*.tmp
+*.swp
+*~
+.~*
+.lock
+*.lock
+
+# ── IDE-specific ─────────────────────────────────────────────────────────────
+.settings/
+.classpath
+.project
+.c9/
+*.launch
+.scala_dependencies
+
+# ── Testing ──────────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+
+# ── Type checking ────────────────────────────────────────────────────────────
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ── Pre-commit ───────────────────────────────────────────────────────────────
+.pre-commit-config.yaml.bak
+
+# ── Local development ────────────────────────────────────────────────────────
+*.local
+debug.log
