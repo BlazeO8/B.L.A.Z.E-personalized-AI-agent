@@ -1,211 +1,264 @@
 <div align="center">
 
-```
-                        ██████╗  ██╗       █████╗  ███████╗ ███████╗
-                        ██╔══██╗ ██║      ██╔══██╗ ╚══███╔╝ ██╔════╝
-                      ██████╔╝ ██║      ███████║   ███╔╝  █████╗
-                      ██╔══██╗ ██║      ██╔══██║  ███╔╝   ██╔══╝
-                        ██████╔╝ ███████╗ ██║  ██║ ███████╗ ███████╗
-                        ╚═════╝  ╚══════╝ ╚═╝  ╚═╝ ╚══════╝ ╚══════╝
-```
+# 🔥 B.L.A.Z.E 🔥
 
-**Brilliantly Linked Autonomous Zone Engine**
+### *Your desktop's new best friend. It talks. It listens. It judges your CPU usage.*
 
-*A personal AI assistant powered by Groq's Llama 3.3 70B*
+![Python](https://img.shields.io/badge/python-3.11+-ffcc00?style=for-the-badge&logo=python&logoColor=black)
+![PySide6](https://img.shields.io/badge/GUI-PySide6-ff5500?style=for-the-badge&logo=qt&logoColor=white)
+![Groq](https://img.shields.io/badge/brain-Groq_LLM-ff0044?style=for-the-badge)
+![FastAPI](https://img.shields.io/badge/server-FastAPI-00c7a5?style=for-the-badge&logo=fastapi&logoColor=white)
+![Vibes](https://img.shields.io/badge/vibes-immaculate-9d00ff?style=for-the-badge)
 
-[![Python](https://img.shields.io/badge/Python-3.12+-blue?style=flat-square&logo=python)](https://python.org)
-[![Groq](https://img.shields.io/badge/Groq-Llama_3.3_70B-orange?style=flat-square)](https://groq.com)
-[![FastAPI](https://img.shields.io/badge/FastAPI-WebSocket-green?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com)
-[![License](https://img.shields.io/badge/License-MIT-purple?style=flat-square)](LICENSE)
+**Say _"Hey Blaze"_ → a glowing orb wakes up → your computer suddenly has opinions.**
 
 </div>
 
 ---
 
-## What is B.L.A.Z.E?
+## 🧨 What even is this?
 
-B.L.A.Z.E is a fully local, privacy-first personal AI assistant you run on your own machine. It connects to [Groq's free inference API](https://groq.com) to get blazing-fast responses from Llama 3.3 70B, and gives you two interfaces — a desktop GUI and a browser-based web UI you can even open from your phone on the same Wi-Fi.
+**B.L.A.Z.E** is a voice-controlled AI desktop assistant that lives on your machine like a tiny
+J.A.R.V.I.S. with a caffeine problem. It has a **glowing animated orb**, a **chat window**, a
+**phone-friendly web dashboard**, and enough integrations to make your other apps jealous.
 
-It's not just a chatbot. It can open apps, search the web, check the weather, set reminders, monitor your system, read the news, manage files, and learn your habits over time.
-
----
-
-## Features
-
-| Category | What it does |
-|---|---|
-| **AI Core** | Groq-powered Llama 3.3 70B with persistent conversation history (40-turn context) |
-| **Dual Interface** | Desktop Tkinter GUI + FastAPI web UI with real-time WebSocket streaming |
-| **System Control** | Open apps, search the web, launch URLs, manage files, list processes |
-| **Reminders** | Natural language reminder parsing — *"remind me to call mom at 6pm"* |
-| **System Monitor** | Live CPU, RAM, disk, battery stats in the sidebar |
-| **Weather & News** | Current weather for your city + top headlines on demand |
-| **Voice I/O** | Text-to-speech replies + speech recognition input (optional) |
-| **Emotional IQ** | Detects your mood and responds with empathy |
-| **Pattern Learner** | Tracks usage habits and makes proactive suggestions |
-| **Secure Vault** | Fernet-encrypted local key-value store for sensitive data |
-| **Plugin System** | Drop a `.py` file into `~/.blaze/plugins/` and it auto-loads |
-| **Domain Expertise** | Specialist prompts for medical, legal, and financial queries |
-| **Morning Briefing** | Weather + news + system stats in one shot |
-| **Custom Commands** | Define your own trigger → response → action shortcuts |
+It can chat, remind, brief, monitor, search, open apps, mirror your Android phone, play Spotify,
+read your Gmail, and quietly panic when your RAM hits 95%.
 
 ---
 
-## Project Structure
+## ⚡ Features (the good stuff)
 
-```
-blaze_project/
-├── blaze_server.py          ← FastAPI web server (run this)
-├── blaze_ui.html            ← Browser frontend
-├── requirements.txt
-└── blaze/
-    ├── main.py              ← Tkinter desktop entry point
-    ├── config.py            ← All env vars and constants
-    ├── deps.py              ← Optional dependency loader
-    ├── ai/
-    │   ├── engine.py        ← BlazeAI: chat, TTS, command dispatch
-    │   ├── persona.py       ← Tone and verbosity settings
-    │   └── voice.py         ← Voice input
-    ├── core/
-    │   ├── database.py      ← SQLite ORM (10 tables)
-    │   ├── security.py      ← Fernet encryption + SecureVault
-    │   └── logging_audit.py ← Structured logging
-    ├── intelligence/
-    │   ├── nlp.py           ← Intent classification + entity extraction
-    │   ├── emotional.py     ← Emotion detection + empathetic responses
-    │   ├── learner.py       ← Habit and pattern learning
-    │   └── domain.py        ← Domain prompts + system prompt builder
-    ├── services/
-    │   ├── system_monitor.py ← CPU/RAM/disk + weather + news + reminders
-    │   └── integrations.py  ← GitHub, Spotify, Wikipedia, currency, etc.
-    ├── plugins/
-    │   └── manager.py       ← Dynamic plugin loader
-    ├── proactive/
-    │   └── monitor.py       ← Background alerts + morning briefing
-    └── gui/
-        ├── app.py           ← Tkinter GUI
-        └── dialogs.py       ← Settings windows
-```
+| | Power | What it does |
+|---|---|---|
+| 🎙️ | **Wake word** | Say *"Hey Blaze"* (it even tolerates hilarious mishearings like "hey blade" and "hey glaze") |
+| 🔮 | **Talk Mode** | Animated orb UI that reacts to what's happening, including a danger state when your system is in trouble |
+| 💬 | **Chat Mode** | Full chat window with thinking animation, cancel button, command history, quick actions, live weather and vitals |
+| 🧠 | **LLM brain** | Powered by [Groq](https://console.groq.com) (default model: `openai/gpt-oss-120b`) |
+| 😤 | **Emotional intelligence** | Detects when you're sad, stressed, angry or hyped and adjusts its tone |
+| 📱 | **Phone Mirror** | Live Android screen mirroring + control over `adb`, decoded with PyAV |
+| 🖥️ | **System monitor** | CPU, RAM, disk, battery, GPU stats, with proactive alerts before things catch fire |
+| ⏰ | **Reminders & automations** | "Remind me to..." actually stores things now. Revolutionary. |
+| ☀️ | **Morning Brief** | Real weather, news and system data, with zero hallucinated numbers |
+| 📧 | **Google suite** | Calendar, Gmail, Drive, Tasks, Sheets, Contacts, YouTube, Maps, Translate |
+| 🎵 | **Spotify** | Control playback (Premium needed for the API bits) |
+| 🔐 | **Encrypted vault** | Because "password123" deserves protection too |
+| 🧩 | **Plugins** | Drop-in plugin system for extending Blaze |
+| 🌐 | **Web dashboard** | FastAPI server + WebSocket UI you can open from your phone |
+| 🖼️ | **Extras** | Image generation, currency conversion, dictionary, Wikipedia, GitHub trending, IP info |
+| 🦕 | **Legacy mode** | The original tkinter UI is still around if you're feeling nostalgic |
 
 ---
 
-## Quick Start
+## 🚀 Quick Start (5 minutes, tops)
 
-### 1. Clone the repo
-
+### 1. Clone it
 ```bash
-git clone https://github.com/YOUR_USERNAME/B.L.A.Z.E.git
-cd B.L.A.Z.E
+git clone https://github.com/<your-username>/Blaze.git
+cd Blaze
 ```
 
-### 2. Install dependencies
-
+### 2. Make a virtual environment
 ```bash
-python -m pip install -r requirements.txt
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+# macOS / Linux
+source .venv/bin/activate
 ```
 
-### 3. Create your `.env` file
+### 3. Install the goodies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Set up your secrets 🤫
+```bash
+cp .env.example .env      # Windows: copy .env.example .env
+```
+Then open `.env` and fill in **at least** these two:
 
 ```env
-GROQ_API_KEY=your_groq_api_key_here
-WEATHER_API_KEY=your_openweathermap_key_here   # optional
-NEWS_API_KEY=your_newsapi_key_here             # optional
-BLAZE_CITY=Delhi                               # your city for weather
+GROQ_API_KEY=your_free_key_from_console.groq.com
+API_TOKEN=paste_a_random_token_here
 ```
 
-Get a **free** Groq API key at [console.groq.com](https://console.groq.com).
-
-### 4. Run the server
-
+Generate a token in one line:
 ```bash
-python blaze_server.py
+python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
-### 5. Open the UI
+> ⚠️ Blaze **refuses to start** without `GROQ_API_KEY`, and without `API_TOKEN` while `REQUIRE_AUTH=true`. That's a feature, not a bug.
 
-Go to **http://localhost:8000** in your browser.
-
-> **Phone access:** Open `http://YOUR_PC_IP:8000` on any device on the same Wi-Fi. Your IP is shown in the terminal when the server starts.
-
----
-
-## Example Commands
-
-```
-"What's the weather today?"
-"Open Spotify"
-"Search for Python tutorials"
-"Remind me to drink water at 3pm"
-"What's my CPU usage?"
-"Give me the latest news"
-"Morning briefing"
-"Show system stats"
-"Open GitHub"
-"What's my battery level?"
-```
-
----
-
-## Optional: Desktop GUI
-
-If you want the Tkinter desktop window instead of the browser UI:
-
+### 5. 🔥 LIGHT IT UP
 ```bash
 python -m blaze.main
 ```
 
 ---
 
-## Plugin System
+## 🎮 Ways to run it
 
-Create a file in `~/.blaze/plugins/myplugin.py`:
+| Command | What you get |
+|---|---|
+| `python -m blaze.main` | The shiny **PySide6** desktop app (orb + chat) |
+| `python -m blaze.main_tkinter` | The **legacy tkinter** UI |
+| `python blaze_server.py` | The **web dashboard** at `http://localhost:8000` |
+| `python google_auth.py` | One-time Google OAuth setup |
+| `python spotify_auth.py` | One-time Spotify OAuth setup |
 
-```python
-def register():
-    return {
-        "name": "my_plugin",
-        "commands": ["my_command"],
-        "handler": handle
-    }
+---
 
-def handle(cmd, arg):
-    if cmd == "my_command":
-        return f"You said: {arg}"
+## 🗣️ Things you can say
+
+```text
+"Hey Blaze"
+"Switch to chat mode"          "Switch to talk mode"
+"Give me my morning brief"
+"What's the weather?"          "Any news today?"
+"Remind me to stretch at 5pm"
+"How's my CPU doing?"
+"Open Chrome"
+"Tell me a joke"
+"What can you do?"
 ```
 
-B.L.A.Z.E auto-loads it on the next restart.
+---
+
+## 🔌 Optional superpowers
+
+<details>
+<summary><b>📧 Google services (Calendar, Gmail, Drive, Tasks, Sheets)</b></summary>
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create a project.
+2. Enable the Calendar, Gmail, Drive, Tasks and Sheets APIs.
+3. Create an **OAuth client ID** (type: *Desktop app*).
+4. Add yourself as a **test user** on the consent screen.
+5. Put `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `.env`.
+6. Run `python google_auth.py` once.
+
+</details>
+
+<details>
+<summary><b>🎵 Spotify</b></summary>
+
+1. Create an app at the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+2. Add `http://127.0.0.1:8888/callback` as a redirect URI.
+3. Put `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` in `.env`.
+4. Run `python spotify_auth.py` once.
+
+</details>
+
+<details>
+<summary><b>📱 Phone Mirror (Android)</b></summary>
+
+1. Install [Android Platform Tools](https://developer.android.com/tools/releases/platform-tools) and make sure `adb` is on your `PATH`.
+2. Enable **USB debugging** on your phone and plug it in.
+3. Open the phone mirror panel in the app.
+
+`scrcpy` is optional and only used by the legacy embedded-window mode (`BLAZE_ENABLE_SCRCPY_EMBED=1`).
+FFmpeg is **not** required separately since PyAV bundles what it needs.
+
+</details>
+
+<details>
+<summary><b>🌐 Web dashboard on your phone</b></summary>
+
+```bash
+python blaze_server.py
+```
+Open `http://localhost:8000`. To reach it from another device on your network, set
+`SERVER_HOST=0.0.0.0` in `.env` and keep `REQUIRE_AUTH=true`. Don't expose it to the open internet
+without HTTPS and a strong `API_TOKEN`.
+
+</details>
 
 ---
 
-## Configuration
+## 🗂️ Project layout
 
-All settings live in `~/.blaze/` on your machine:
+```text
+Blaze/
+├── blaze/
+│   ├── main.py              # 🚪 PySide6 entry point
+│   ├── main_tkinter.py      # 🦕 legacy tkinter entry point
+│   ├── config.py            # ⚙️  all settings, loaded from .env
+│   ├── security.py          # 🛡️  security helpers
+│   ├── deps.py              # 📦 optional-dependency detection
+│   ├── ai/                  # 🧠 LLM engine, persona, voice / wake word
+│   ├── core/                # 🗄️  database, devices, encryption, audit log
+│   ├── gui/                 # 🎨 orb, chat window, phone mirror, dialogs
+│   ├── handlers/            # 🎯 one handler per command type
+│   ├── intelligence/        # 🔮 NLP, emotion, learning, automations
+│   ├── proactive/           # 🚨 background alerts & suggestions
+│   ├── plugins/             # 🧩 plugin manager
+│   ├── services/            # 🔌 Google, Spotify, Android, system stats...
+│   └── data/                # 📁 starter automations & knowledge
+├── blaze_server.py          # 🌐 FastAPI + WebSocket server
+├── blaze_ui.html            # 📱 web dashboard front-end
+├── google_auth.py           # 🔑 one-time Google OAuth
+├── spotify_auth.py          # 🔑 one-time Spotify OAuth
+├── docs/CHANGES.md          # 📝 detailed development notes
+├── requirements.txt
+├── .env.example
+└── .gitignore
+```
 
-| File | Purpose |
+Runtime data (database, logs, encryption key, vault, plugins) lives in `~/.blaze/`, **outside** the repo.
+
+---
+
+## 🛡️ Security notes
+
+- 🔑 API keys live in `.env`, which is **git-ignored**. Never commit it.
+- 🔒 The web server binds to `127.0.0.1` by default and requires a token.
+- 🧱 CORS is restricted to localhost unless you flip `ALLOW_ALL_ORIGINS`.
+- 🗝️ Conversations are encrypted by default (`ENCRYPT_CONVERSATIONS=true`).
+
+If you ever accidentally commit a key, **rotate it immediately**. Deleting the commit isn't enough.
+
+---
+
+## 🪟 Platform notes
+
+Blaze is developed primarily on **Windows** (`pywin32` and `WMI` are Windows-only and installed
+automatically there). Most features are guarded so they degrade gracefully on macOS and Linux, but
+expect some rough edges.
+
+---
+
+## 🧯 Troubleshooting
+
+| Problem | Fix |
 |---|---|
-| `blaze.db` | SQLite database (conversations, reminders, notes, habits) |
-| `blaze.key` | Encryption key for the vault |
-| `vault.enc` | Encrypted secrets store |
-| `blaze.log` | Audit log |
-| `plugins/` | Custom plugin directory |
+| `GROQ_API_KEY not found` | Create `.env` from `.env.example` and add your key |
+| `API_TOKEN not set but REQUIRE_AUTH=true` | Generate a token (see Quick Start step 4) |
+| Model returns 404 / `model_not_found` | Set `GROQ_MODEL` in `.env` to a currently supported Groq model |
+| Phone mirror shows nothing | Check `adb devices`, USB debugging and the USB cable |
+| Wake word never triggers | Check your microphone and that `SpeechRecognition` installed properly |
 
 ---
 
-## Requirements
+## 🤝 Contributing
 
-- Python 3.12+
-- Windows 10/11 (primary support; macOS and Linux work with minor limitations)
-- A free [Groq API key](https://console.groq.com)
-- Internet connection for AI responses, weather, and news
-
----
-
-## Built by
-
-**Kartik** (BlazeOS) — built as a personal project to have a proper AI assistant that actually controls the computer, not just chats.
+1. Fork it 🍴
+2. Branch it 🌿 `git checkout -b feature/absurdly-cool-thing`
+3. Commit it 💾
+4. Push it 🚀
+5. Open a PR 🎉
 
 ---
+
+## 📜 License
+
+MIT, see [LICENSE](LICENSE). Go build something wild.
 
 <div align="center">
-<sub>Powered by <a href="https://groq.com">Groq</a> · Built with FastAPI, SQLite, and too much caffeine</sub>
+
+**Made with ☕, 🔥 and questionable sleep schedules.**
+
+⭐ *If Blaze made you smile, smash that star button.* ⭐
+
 </div>
