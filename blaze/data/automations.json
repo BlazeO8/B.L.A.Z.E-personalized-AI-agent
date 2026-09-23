@@ -1,0 +1,11 @@
+[
+  {
+    "name": "good morning",
+    "trigger": "good morning",
+    "actions": [
+      "open chrome"
+    ],
+    "time": null,
+    "enabled": true
+  }
+]

@@ -1,0 +1,63 @@
+# ── Secrets (NEVER commit these) ─────────────────────────
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.enc
+vault.enc
+token.json
+token.pickle
+credentials.json
+client_secret*.json
+.blaze_spotify_cache
+.cache
+
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ── Virtual environments ─────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Local BLAZE runtime data (lives in ~/.blaze normally) ─
+.blaze/
+*.db
+*.sqlite
+*.sqlite3
+*.log
+logs/
+
+# ── Testing / tooling ────────────────────────────────────
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ── IDEs / editors ───────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS junk ──────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Phone-mirror captures / temp media ───────────────────
+screenshots/
+*.mp4
+*.h264
