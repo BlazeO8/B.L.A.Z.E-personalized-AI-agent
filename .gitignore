@@ -1,37 +1,38 @@
-# ── Secrets (NEVER commit these) ─────────────────────────
+# ── Secrets (NEVER commit these) ─────────────────────────────
 .env
 .env.*
 !.env.example
 *.key
 *.pem
 *.enc
-vault.enc
-token.json
-token.pickle
-credentials.json
 client_secret*.json
+credentials.json
+token.json
+.blaze_google_token.json
 .blaze_spotify_cache
+.spotify_cache
 .cache
 
-# ── Python ───────────────────────────────────────────────
+# ── Python ───────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.Python
+*.pyd
 build/
 dist/
 *.egg-info/
 .eggs/
 pip-wheel-metadata/
 
-# ── Virtual environments ─────────────────────────────────
+# ── Virtual environments ─────────────────────────────────────
 .venv/
+.venvBlaze/
 venv/
 env/
 ENV/
 
-# ── Local BLAZE runtime data (lives in ~/.blaze normally) ─
+# ── Runtime data / logs / local DB ───────────────────────────
 .blaze/
 *.db
 *.sqlite
@@ -39,25 +40,20 @@ ENV/
 *.log
 logs/
 
-# ── Testing / tooling ────────────────────────────────────
+# ── Testing / tooling ────────────────────────────────────────
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
 htmlcov/
 
-# ── IDEs / editors ───────────────────────────────────────
+# ── IDEs / editors ───────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# ── OS junk ──────────────────────────────────────────────
+# ── OS junk ──────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# ── Phone-mirror captures / temp media ───────────────────
-screenshots/
-*.mp4
-*.h264
